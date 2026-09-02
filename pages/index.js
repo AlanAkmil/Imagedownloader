@@ -62,7 +62,9 @@ export default function Home() {
           const cleanPath = imgUrl.split('?')[0];
           let ext = cleanPath.split('.').pop();
           if (!ext || ext.length > 5 || ext.includes('/')) ext = 'jpg';
-          zip.file(`image-${i + 1}.${ext}`, blob);
+          const padLength = String(list.length).length;
+          const num = String(i + 1).padStart(padLength, '0');
+          zip.file(`image-${num}.${ext}`, blob);
         } catch (e) {
           // skip gambar yang gagal
         }
@@ -117,11 +119,20 @@ export default function Home() {
                   key={i}
                   style={{
                     ...styles.thumb,
-                    outline: selected.has(img) ? '3px solid #111' : '3px solid transparent',
+                    outline: selected.has(img) ? '3px solid #06d6a0' : '3px solid transparent',
+                    opacity: selected.has(img) ? 1 : 0.55,
                   }}
                   onClick={() => toggleSelect(img)}
                 >
                   <img src={img} alt="" style={styles.thumbImg} loading="lazy" />
+                  <div
+                    style={{
+                      ...styles.checkbox,
+                      background: selected.has(img) ? '#06d6a0' : '#fff',
+                    }}
+                  >
+                    {selected.has(img) && <span style={styles.checkmark}>✓</span>}
+                  </div>
                 </div>
               ))}
             </div>
@@ -207,6 +218,7 @@ const styles = {
     marginBottom: '20px',
   },
   thumb: {
+    position: 'relative',
     aspectRatio: '1',
     border: '2px solid #111',
     overflow: 'hidden',
@@ -217,6 +229,25 @@ const styles = {
     width: '100%',
     height: '100%',
     objectFit: 'cover',
+  },
+  checkbox: {
+    position: 'absolute',
+    top: '6px',
+    right: '6px',
+    width: '22px',
+    height: '22px',
+    border: '2px solid #111',
+    borderRadius: '4px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    boxShadow: '2px 2px 0 #111',
+  },
+  checkmark: {
+    color: '#111',
+    fontWeight: 900,
+    fontSize: '14px',
+    lineHeight: 1,
   },
   downloadButton: {
     width: '100%',
